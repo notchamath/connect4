@@ -23,7 +23,34 @@ def get_next_open_row(board, col):
 
 
 def winning_move(board, player):
-    pass
+    # Horizontal
+    for col in range(COLS - 3):
+        for row in range(ROWS):
+            if board[row][col] == player and board[row][col+1] == player and board[row][col+2] == player and board[row][col+3] == player:
+                return True
+
+    # Vertical
+    for col in range(COLS):
+        for row in range(ROWS - 3):
+            if board[row][col] == player and board[row+1][col] == player and board[row+2][col] == player and board[row+3][col] == player:
+                return True
+
+    # Negative Sloped Diagonal
+    for col in range(COLS - 3):
+        for row in range(ROWS - 3):
+            if board[row][col] == player and board[row+1][col+1] == player and board[row+2][col+2] == player and board[row+3][col+3] == player:
+                return True
+
+    # Positive Sloped Diagonal
+    for col in range(COLS - 3):
+        for row in range(3, ROWS):
+            if board[row][col] == player and board[row-1][col+1] == player and board[row-2][col+2] == player and board[row-3][col+3] == player:
+                return True
+
+
+def print_board():
+    print("\n")
+    print(board)
 
 
 board = create_board()
@@ -31,8 +58,7 @@ game_over = False
 turn = 0
 
 while not game_over:
-    print("\n")
-    print(board)
+    print_board()
 
     try:
         # Player 1 input
@@ -56,6 +82,11 @@ while not game_over:
             row = get_next_open_row(board, col)
             player = turn % 2 + 1
             drop_piece(board, row, col, player)
+
+            if winning_move(board, player):
+                game_over = True
+                print_board()
+                print(f"Game over! Player {player} wins!")
 
             turn += 1
         else:
